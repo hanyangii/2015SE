@@ -72,22 +72,20 @@ def edf(tasks):
 
 
 
-def edf_scheduling(task_num):
-	print "edfedf"
+def edf_scheduling(task_num, inputFile):
+	print "edf"
 #	filename = input("please write filename: ")
 #	filename = str(filename)+'.txt'
-	filename = 'input.txt'
-	inputFile=open(filename,'w')
+#	filename = 'input.txt'
+#	inputFile=open(filename,'w')
 
 	for i in range(task_num):
-		start = input("start %d: " %i)
-		period = input("period %d :" %i)
-		executiontime = input("execution time %d: " %i)
-		
-		tasks.append(Task(i,start,period, executiontime))
-		start = str(i)+" "+str(start)+" "+str(period)+" "+str(executiontime)+" "+"\n"
-		inputFile.write(str(start))
-	inputFile.close()
+		line = inputFile.readline()
+		if not line: break
+		line=line.split(' ')
+		task=Task(line[0], line[1], line[2], line[3])
+		tasks.append(task)
+	
 	edf(tasks)
 
 

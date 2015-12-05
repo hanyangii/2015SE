@@ -1,6 +1,8 @@
 import math
+import os
 
 tasks = []
+result=""
 
 class Task:
 	def __init__(self,cpuId,start,period,executiontime):
@@ -26,7 +28,14 @@ def ispossible(tasks):
 	if float(U)>Usum : return True
 	else: return False
 
-def rm(tasks):
+def save_rm(inputFile):
+	outputFileName=inputFile.name.split(".")
+	outputFile = open(outputFileName[0]+"_result.txt", "w")
+	outputFile.write(result)
+	outputFile.close()
+
+
+def rm(tasks, inputFile):
 	print "rm scheduling"
 	tasks.sort(key=lambda Task:Task.start)
 	print tasks
@@ -35,6 +44,7 @@ def rm(tasks):
 	i=0
 	curCPU=0
 	startTask=0
+	#outputFileName=os.path.basename(inputFile)
 	if ispossible(tasks) == False :
 		print 'it is impossible scheduling'
 		return 
@@ -55,29 +65,29 @@ def rm(tasks):
 			working[0].cur+=1
 			curCPU = working[0].cpuId
 
-			print str(working[0]) + ' ' + str(curCPU)
+			result_cur=str(working[0]) + ' ' + str(curCPU)
+			print result_cur
+			result+=(result_cur+'\n')
 		
 		time+=1
-		if len(working)==0 and startTask==len(tasks): break
+		if time>200: break
 
 
 
-def rm_scheduling(task_num):
+def rm_scheduling(task_num, inputFile):
 	print "rmrm"
 #	filename = input("please write filename: ")
 #	filename = str(filename)+'.txt'
-	filename = 'input.txt'
-	inputFile=open(filename,'w')
+#	filename = 'input.txt'
+#	inputFile=open(filename,'w')
 
 	for i in range(task_num):
-		start = input("start %d: " %i)
-		period = input("period %d :" %i)
-		executiontime = input("execution time %d: " %i)
-		
-		tasks.append(Task(i,start,period,executiontime))
-		start = str(i)+" "+str(start)+" "+str(period)+" "+str(executiontime)+" "+"\n"
-		inputFile.write(str(start))
-	inputFile.close()
-	rm(tasks)
+		line = inputFile.readline()
+		if not line: break
+		line=line.split(' ')
+		task=Task(line[0], line[1], line[2], line[3])
+		tasks.append(task)
+	
+	rm(tasks, inputFile)
 
 
